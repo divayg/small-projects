@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snake Game</title>
+    <style>
+        body{
+            background: #349df3;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        h1{
+            color:#fff;
+            font-family: cursive;
+            font-weight:200;
+        }
+        #score{
+             width:40px;
+            height:40px;
+            background:#333;
+            color:rgb(56, 221, 250);
+            padding:5px;
+            text-align: end;
+            font-size:20px;
+            font-weight:600;
+        }
+        .score-container{
+            padding:10px;
+            margin:10px;
+        }
+        label{
+            padding:5px;
+            font-weight: 400;
+            color:#fefefe;
+        }
+    </style>
+</head>
+<body>
+    <h1>Snake Bite</h1>
+    <canvas id="canva" height="400px" width="800px"></canvas>
+    <div class="score-container">
+        <label for="score">SCORE</label><input type="number" name="score" id="score">
+    </div>
+    <script>
+        
+        window.onload=function(){
+            canv= document.getElementById("canva");  
+            ctx=canv.getContext("2d");
+            document.addEventListener("keydown",keyPush);
+            setInterval(game,1000/15);
+        }
+        px=py=10;
+        gs=20;tc=40;
+        ax=ay=15;
+        xv=yv=0;
+        trail=[];
+        tail=5;
+        function game(){
+            px+=xv;
+            py+=yv;
+            if(px<0){
+                px=tc-1;
+            }
+            if(px>tc-1){
+                px=0;
+            }
+            if(py<0){
+                py=tc/2-1;
+            }
+            if(py>tc/2-1){
+                py=0;
+            }
+
+            ctx.fillStyle="Black";
+            ctx.fillRect(0,0,canv.width,canv.height);
+
+            ctx.fillStyle="Red";
+            // ctx.beginPath();
+            // ctx.arc(ax*gs,ay*gs,(gs-3)/2,0,2*Math.PI);
+            // ctx.fill();
+
+            ctx.fillRect(ax*gs,ay*gs,gs-3,gs-3);
+            
+            
+            ctx.fillStyle="#3496f3";
+            for(i=0;i<trail.length;i++){
+                ctx.fillRect(trail[i].x*gs,trail[i].y*gs,gs-2,gs-2);
+                
+                if(trail[i].x==px && trail[i].y==py){
+                    tail=5;
+                    document.getElementById("score").value=0;
+                }
+            }
+            trail.push({x:px,y:py})
+            while(trail.length>tail){
+                trail.shift();
+            }
+            if(ax==px && ay == py){
+                tail++;
+                document.getElementById("score").value=tail-5;
+                ax=Math.floor(Math.random()*tc);
+                ay=Math.floor(Math.random()*tc/2);
+            }
+        }
+        function keyPush(evt){
+            switch(evt.keyCode){
+                case 37: xv=-1;yv=0;
+                        break;
+                case 38: xv=0;yv=-1;
+                        break;
+                case 39: xv=1;yv=0;
+                        break;
+                case 40: xv=0;yv=1;
+                        break;
+            }
+        }
+    </script>
+</body>
+</html>
